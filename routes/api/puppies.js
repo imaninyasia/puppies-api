@@ -10,9 +10,15 @@ router.get('/', getAllPuppies, (req, res) => {
 });
 
 // Implement POST to adopt a puppy
+router.post('/', adoptPuppy, (req, res) => {
+  res.send('Successful Post');
+});
 
 // Implement PUT to like a puppy
 
 // Implement DELETE to abandon a puppy :(
+router.delete('/:id', abandonPuppy, (req, res) => {
+  res.send('Successful Post');
+});
 
 module.exports = router;

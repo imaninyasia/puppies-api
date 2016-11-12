@@ -2,6 +2,7 @@
 require('dotenv').config({ silent: true });
 const express = require('express');
 const bodyParser = require('body-parser');
+const logger = require('morgan');
 const path = require('path');
 
 const app = express();
@@ -9,6 +10,8 @@ const PORT = process.env.PORT || 3000;
 
 // Set default static assets folder
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(logger('dev'));
 
 // This will parse our payload from fetch which is sent as a JSON object
 app.use(bodyParser.json());
