@@ -15,6 +15,9 @@ function adoptPuppy(payload) {
 
 function likePuppy() {
   // Implement liking a puppy here.
+  return fetch(`/api/puppies/${id}`, {
+    method: 'PUT',
+  });
 }
 
 function abandonPuppy(id) {
