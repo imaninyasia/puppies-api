@@ -13,7 +13,7 @@ function adoptPuppy(payload) {
   });
 }
 
-function likePuppy() {
+function likePuppy(id) {
   // Implement liking a puppy here.
   return fetch(`/api/puppies/${id}`, {
     method: 'PUT',
@@ -52,10 +52,11 @@ function renderPuppies(puppies) {
       .attr('src', puppies[i].url);
 
     // You should add a button for liking here
-
+    $newPuppy
+      .append($("<button class='like-puppy'>").attr('id', puppies[i].id).text('Like this abomination'));
     // you should add a button for abandoning here
     $newPuppy
-      .append($("<button class='delete-puppy'>").attr('id', puppies[i].id).text('Abandon this fool'))
+      .append($("<button class='delete-puppy'>").attr('id', puppies[i].id).text('Abandon this fool'));
 
     $container.append($newPuppy);
   }
@@ -63,6 +64,15 @@ function renderPuppies(puppies) {
 
 function registerLikeButtonHandler() {
   // implement like button listener here.
+  $('.like-puppy').on('click', event => {
+    console.log(event.target.id);
+    likePuppy(event.target.id).then(() => {
+      getAllPuppies()
+        .then(renderPuppies)
+        .then(registerLikeButtonHandler)
+        .then(registerAbandonButtonHandler);
+    });
+  });
 }
 
 function registerAbandonButtonHandler() {
@@ -70,7 +80,10 @@ function registerAbandonButtonHandler() {
   $('.delete-puppy').on('click', (event) => {
     console.log(event.target.id);
     abandonPuppy(event.target.id).then(() => {
-      getAllPuppies().then(renderPuppies);
+      getAllPuppies()
+        .then(renderPuppies)
+        .then(registerLikeButtonHandler)
+        .then(registerAbandonButtonHandler);
     });
   });
 }
@@ -97,5 +110,6 @@ $(() => {
   registerLikeButtonHandler();
   getAllPuppies()
     .then(renderPuppies)
+    .then(registerLikeButtonHandler)
     .then(registerAbandonButtonHandler);
 });
