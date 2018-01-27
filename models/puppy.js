@@ -2,7 +2,7 @@ const db = require('../lib/dbConnect');
 
 function getAllPuppies(req, res, next) {
 
-  db.any('SELECT * from puppies WHERE $1~ = $2;', ['name','Irwin'])
+  db.any('SELECT * from puppies;')
     .then((puppies) => {
       res.puppies = puppies;
       next();
@@ -30,8 +30,8 @@ function abandonPuppy(req, res, next) {
 
 function likePuppy(req, res, next) {
   // Implement increasing the likes value of the puppy by one
-  db.none(`UPDATE puppies 
-          SET likes = likes + 1 
+  db.none(`UPDATE puppies
+          SET likes = likes + 1
           WHERE id = $1`,
           req.params.id)
     .then(() => next())

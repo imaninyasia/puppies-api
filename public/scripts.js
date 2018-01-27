@@ -1,6 +1,7 @@
 function getAllPuppies() {
   return fetch('/api/puppies')
-    .then(r => r.json());
+    .then(r => r.json())
+    .then((r)=> renderPuppies(r));
 }
 
 function adoptPuppy(payload) {
@@ -15,19 +16,20 @@ function adoptPuppy(payload) {
 
 function likePuppy(id) {
   // Implement liking a puppy here.
-  return fetch(`/api/puppies/${id}`, {
+  return fetch(`/api/puppies/like/${id}`, {
     method: 'PUT',
-  });
+  }).then(getAllPuppies);
 }
 
 function abandonPuppy(id) {
   // Implement abandoning a puppy here :(
-  return fetch('/api/puppies/' + id, {
+  return fetch(`/api/puppies/delete/${id}`, {
     headers: {
       'Content-Type': 'application/json'
     },
     method: 'DELETE',
   });
+  console.log('abandoning')
 }
 
 
@@ -53,11 +55,17 @@ function renderPuppies(puppies) {
 
     // You should add a button for liking here
     $newPuppy
-      .append($("<button class='like-puppy'>").attr('id', puppies[i].id).text('Like this abomination'));
+      .append($("<button class='like-puppy'>").attr('id', puppies[i].id).text('Like woofer'))
+      $newPuppy.find('.like-puppy').on('click', (e) => {
+        console.log('like')
+       likePuppy(puppies[i].id);
+    })
+      ;
     // you should add a button for abandoning here
-    $newPuppy
-      .append($("<button class='delete-puppy'>").attr('id', puppies[i].id).text('Abandon this fool'));
 
+    $newPuppy
+      .append($("<button class='delete-puppy'>").attr('id', puppies[i].id).text('Abandon the pup'))
+      $newPuppy.find('.delete-puppy').on('click', (e) => {abandonPuppy(puppies[i].id).then(getAllPuppies); console.log('abandon')});
     $container.append($newPuppy);
   }
 }
@@ -68,7 +76,6 @@ function registerLikeButtonHandler() {
     console.log(event.target.id);
     likePuppy(event.target.id).then(() => {
       getAllPuppies()
-        .then(renderPuppies)
         .then(registerLikeButtonHandler)
         .then(registerAbandonButtonHandler);
     });
@@ -81,7 +88,6 @@ function registerAbandonButtonHandler() {
     console.log(event.target.id);
     abandonPuppy(event.target.id).then(() => {
       getAllPuppies()
-        .then(renderPuppies)
         .then(registerLikeButtonHandler)
         .then(registerAbandonButtonHandler);
     });
@@ -97,9 +103,9 @@ function registerFormHandler() {
       name: $form.find('[name=name]').val(),
       url: $form.find('[name=url]').val()
     };
-
+console.log($form.find('[name=url]').val())
     adoptPuppy(puppy).then(() => {
-      getAllPuppies().then(renderPuppies);
+      getAllPuppies();
     });
   });
 }
@@ -108,8 +114,6 @@ function registerFormHandler() {
 $(() => {
   registerFormHandler();
   registerLikeButtonHandler();
-  getAllPuppies()
-    .then(renderPuppies)
-    .then(registerLikeButtonHandler)
-    .then(registerAbandonButtonHandler);
+  registerAbandonButtonHandler();
+  getAllPuppies();
 });

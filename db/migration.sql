@@ -1,4 +1,5 @@
 BEGIN;
+DROP TABLE IF EXISTS puppies;
 
 CREATE TABLE puppies (
   id SERIAL PRIMARY KEY,
@@ -11,6 +12,6 @@ CREATE TABLE puppies (
 
 COPY puppies (name, url)
 -- UPDATE THIS PATH WITH YOUR OWN!
-FROM '/Users/Irwin/code/wdi/puppiesapi/db/puppies.csv' with (format csv, delimiter ',');
+FROM '/Users/imani/code/urbanArts/workshop/puppies-api/db/puppies.csv' with (format csv, delimiter ',');
 
 COMMIT;
